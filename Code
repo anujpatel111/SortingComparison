@@ -1,0 +1,114 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class SortingComparison {
+
+    public static void main(String[] args) {
+        int size = 10000; // Adjust the size of the list as needed
+        ArrayList<Integer> list = generateRandomList(size);
+
+        // Display the original list
+        System.out.println("Original List:");
+        printList(list);
+
+        // Make copies of the list for sorting
+        ArrayList<Integer> mergeSortList = new ArrayList<>(list);
+        ArrayList<Integer> bubbleSortList = new ArrayList<>(list);
+
+        // Perform MergeSort
+        long mergeStartTime = System.currentTimeMillis();
+        mergeSort(mergeSortList);
+        long mergeEndTime = System.currentTimeMillis();
+        long mergeSortTime = mergeEndTime - mergeStartTime;
+
+        // Perform BubbleSort
+        long bubbleStartTime = System.currentTimeMillis();
+        bubbleSort(bubbleSortList);
+        long bubbleEndTime = System.currentTimeMillis();
+        long bubbleSortTime = bubbleEndTime - bubbleStartTime;
+
+        // Display the sorted lists
+        System.out.println("MergeSort Result:");
+        printList(mergeSortList);
+        System.out.println("BubbleSort Result:");
+        printList(bubbleSortList);
+
+        System.out.println("MergeSort Time: " + mergeSortTime + " ms");
+        System.out.println("BubbleSort Time: " + bubbleSortTime + " ms");
+    }
+
+    public static ArrayList<Integer> generateRandomList(int size) {
+        ArrayList<Integer> list = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < size; i++) {
+            list.add(random.nextInt(10000)); // Adjust the range as needed
+        }
+        return list;
+    }
+
+    public static void mergeSort(ArrayList<Integer> list) {
+        if (list.size() <= 1) {
+            return;
+        }
+
+        int middle = list.size() / 2;
+        ArrayList<Integer> left = new ArrayList<>(list.subList(0, middle));
+        ArrayList<Integer> right = new ArrayList<>(list.subList(middle, list.size()));
+
+        mergeSort(left);
+        mergeSort(right);
+
+        merge(list, left, right);
+    }
+
+    public static void merge(ArrayList<Integer> result, ArrayList<Integer> left, ArrayList<Integer> right) {
+        int i = 0, j = 0, k = 0;
+        while (i < left.size() && j < right.size()) {
+            if (left.get(i) < right.get(j)) {
+                result.set(k, left.get(i));
+                i++;
+            } else {
+                result.set(k, right.get(j));
+                j++;
+            }
+            k++;
+        }
+
+        while (i < left.size()) {
+            result.set(k, left.get(i));
+            i++;
+            k++;
+        }
+
+        while (j < right.size()) {
+            result.set(k, right.get(j));
+            j++;
+            k++;
+        }
+    }
+
+    public static void bubbleSort(ArrayList<Integer> list) {
+        int n = list.size();
+        boolean swapped;
+        do {
+            swapped = false;
+            for (int i = 1; i < n; i++) {
+                if (list.get(i - 1) > list.get(i)) {
+                    int temp = list.get(i - 1);
+                    list.set(i - 1, list.get(i));
+                    list.set(i, temp);
+                    swapped = true;
+                }
+            }
+            n--;
+        } while (swapped);
+    }
+
+    public static void printList(List<Integer> list) {
+        for (int value : list) {
+            System.out.print(value + " ");
+        }
+        System.out.println();
+    }
+}
